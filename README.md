@@ -8,51 +8,14 @@
 
     data Yargs :: *
 
-    data YargsSetup :: *
-
-
-### Type Class Instances
-
-    instance monoidYargsSetup :: Monoid YargsSetup
-
-    instance semigroupYargsSetup :: Semigroup YargsSetup
-
 
 ### Values
 
-    alias :: String -> String -> YargsSetup
-
     argv :: forall eff. Yargs -> Eff (console :: Console | eff) Foreign
-
-    boolean :: String -> YargsSetup
-
-    config :: String -> YargsSetup
-
-    demand :: String -> String -> YargsSetup
-
-    describe :: String -> String -> YargsSetup
-
-    example :: String -> String -> YargsSetup
-
-    help :: String -> String -> YargsSetup
-
-    requiresArg :: String -> YargsSetup
 
     runYargs :: forall eff. YargsSetup -> Eff (console :: Console | eff) Foreign
 
     setupWith :: forall eff. YargsSetup -> Yargs -> Eff (console :: Console | eff) Yargs
-
-    showHelpOnFail :: Boolean -> String -> YargsSetup
-
-    strict :: YargsSetup
-
-    string :: String -> YargsSetup
-
-    usage :: String -> YargsSetup
-
-    version :: String -> String -> String -> YargsSetup
-
-    wrap :: Number -> YargsSetup
 
     yargs :: forall eff. Eff (console :: Console | eff) Yargs
 
@@ -94,3 +57,48 @@
 ### Values
 
     runY :: forall a eff. YargsSetup -> Y (Eff eff a) -> Eff (console :: Console, err :: Exception | eff) a
+
+
+## Module Node.Yargs.Setup
+
+### Types
+
+    data YargsSetup :: *
+
+
+### Type Class Instances
+
+    instance monoidYargsSetup :: Monoid YargsSetup
+
+    instance semigroupYargsSetup :: Semigroup YargsSetup
+
+
+### Values
+
+    alias :: String -> String -> YargsSetup
+
+    boolean :: String -> YargsSetup
+
+    config :: String -> YargsSetup
+
+    demand :: String -> String -> YargsSetup
+
+    describe :: String -> String -> YargsSetup
+
+    example :: String -> String -> YargsSetup
+
+    help :: String -> String -> YargsSetup
+
+    requiresArg :: String -> YargsSetup
+
+    showHelpOnFail :: Boolean -> String -> YargsSetup
+
+    strict :: YargsSetup
+
+    string :: String -> YargsSetup
+
+    usage :: String -> YargsSetup
+
+    version :: String -> String -> String -> YargsSetup
+
+    wrap :: Number -> YargsSetup

@@ -10,6 +10,7 @@ import Data.Monoid
 import Data.Either
 
 import Node.Yargs
+import Node.Yargs.Setup
 
 import Control.Monad.Eff
 import Control.Monad.Eff.Unsafe

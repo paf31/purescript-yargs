@@ -4,6 +4,7 @@ import Data.Either
 import Data.Foreign
 
 import Node.Yargs
+import Node.Yargs.Setup
 import Node.Yargs.Applicative
 
 import Debug.Trace
