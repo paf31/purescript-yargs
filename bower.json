@@ -1,0 +1,24 @@
+{
+  "name": "purescript-yargs",
+  "description": "PureScript bindings for the yargs command-line parsing library",
+  "keywords": ["purescript"],
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "js",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-foreign"      : ">=0.1.6",
+    "purescript-easy-ffi"     : ">=1.0.0"
+  },
+  "devDependencies": {
+    "purescript-control"      : "*"
+  }
+}
