@@ -25,6 +25,7 @@ module Node.Yargs
 
 import Data.Foreign
 import Data.Foreign.EasyFFI
+import Data.Monoid
 
 import Control.Monad.Eff
 
@@ -41,6 +42,9 @@ foreign import yargs
 
 instance semigroupYargsSetup :: Semigroup YargsSetup where
   (<>) = unsafeForeignFunction ["s1", "s2", "y"] "s2(s1(y))"
+
+instance monoidYargsSetup :: Monoid YargsSetup where
+  mempty = unsafeForeignFunction ["y"] "y"
 
 setupWith :: forall eff. YargsSetup -> Yargs -> Eff (console :: Console | eff) Yargs 
 setupWith = unsafeForeignFunction ["setup", "y", ""] "setup(y)"

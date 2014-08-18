@@ -4,41 +4,29 @@ import Data.Either
 import Data.Foreign
 
 import Node.Yargs
+import Node.Yargs.Applicative
 
 import Debug.Trace
 
-data Args = Args 
-  { x :: String
-  , y :: String 
-  , reverse :: Boolean
-  }
+import Control.Monad.Eff
 
-instance readForeignArgs :: ReadForeign Args where
-  read = do
-    x <- prop "x"
-    y <- prop "y"
-    reverse <- prop "reverse"
-    return $ Args { x: x, y: y, reverse: reverse }
+app :: forall eff. [String] -> Boolean -> Eff (trace :: Trace | eff) Unit
+app []       _     = return unit
+app (s : ss) false = do
+  trace s
+  app ss false
+app (s : ss) true  = do
+  app ss true
+  trace s
 
 main = do
-  let setup = usage "$0 -x Word1 -y Word2" 
-                <> example "$0 -x Hello -y World" "Say hello!"
-	        <> alias "x" "first"
-                <> alias "y" "second"
+  let setup = usage "$0 -w Word1 -w Word2" 
+                <> example "$0 -w Hello -w World" "Say hello!"
+	        <> alias "w" "word"
                 <> alias "r" "reverse"
-                <> demand "x" "First argument is required"
-                <> demand "y" "Second argument is required"
-                <> string "x"
-                <> string "y"
-		<> boolean "r"
-                <> requiresArg "x"
-		<> requiresArg "y"
- 		<> describe "x" "The first word"
-                <> describe "y" "The second word"
+                <> demand "w" "At least one word is required"
+                <> requiresArg "w"
+ 		<> describe "w" "A word"
 		<> describe "r" "Reverse the words"
 
-  args <- runYargs setup
-  case parseForeign read args of
-    Left err -> print err
-    Right (Args o) | o.reverse -> trace $ o.y ++ " " ++ o.x
-    Right (Args o) -> trace $ o.x ++ " " ++ o.y
+  runY setup (app <$> arg "w" <*> arg "r")

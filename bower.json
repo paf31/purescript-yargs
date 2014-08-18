@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "purescript-foreign"      : ">=0.1.6",
+    "purescript-exceptions"   : ">=0.2.0",
     "purescript-easy-ffi"     : ">=1.0.0"
   }
 }
