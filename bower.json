@@ -17,8 +17,5 @@
   "dependencies": {
     "purescript-foreign"      : ">=0.1.6",
     "purescript-easy-ffi"     : ">=1.0.0"
-  },
-  "devDependencies": {
-    "purescript-control"      : "*"
   }
 }
