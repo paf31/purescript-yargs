@@ -16,6 +16,7 @@ import Node.Yargs.Setup
 import Control.Monad.Eff
 import Control.Monad.Eff.Unsafe
 import Control.Monad.Eff.Exception
+import Control.Alt ((<|>))
 
 newtype Y a = Y { setup :: YargsSetup
                 , read  :: Foreign -> F a
@@ -57,17 +58,21 @@ instance argNumber :: Arg Number where
               , read: readProp key
               }
 
+readOneOrMany :: forall a. (IsForeign a) => String -> Foreign -> F [a]
+readOneOrMany key value = (pure <$> readProp key value)
+                                <|> readProp key value 
+
 instance argStrings :: Arg [String] where
   arg key = Y { setup: string key 
-              , read: readProp key
+              , read: readOneOrMany key
               }
 
 instance argBooleans :: Arg [Boolean] where
   arg key = Y { setup: boolean key 
-              , read: readProp key
+              , read: readOneOrMany key
               }
 	      
 instance argNumbers :: Arg [Number] where
   arg key = Y { setup: mempty 
-              , read: readProp key
+              , read: readOneOrMany key
               }
