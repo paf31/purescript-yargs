@@ -4,6 +4,7 @@ module Node.Yargs.Applicative
   , Arg
   , yarg
   , flag
+  , rest
   ) where
 
 import Data.Maybe
@@ -97,3 +98,8 @@ yarg key aliases desc required needArg =
 
 flag :: forall a. (Arg a) => String -> [String] -> Maybe String -> Y a
 flag key aliases desc = yarg key aliases desc Nothing false
+
+rest :: Y [Foreign]
+rest = Y { setup: mempty
+         , read: readArray
+         }
