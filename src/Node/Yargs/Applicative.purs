@@ -2,13 +2,15 @@ module Node.Yargs.Applicative
   ( Y()
   , runY
   , Arg
-  , arg
+  , yarg
   ) where
 
+import Data.Maybe
 import Data.Foreign
 import Data.Foreign.Class
 import Data.Monoid
 import Data.Either
+import Data.Foldable (foldMap)
 
 import Node.Yargs
 import Node.Yargs.Setup
@@ -21,6 +23,9 @@ import Control.Alt ((<|>))
 newtype Y a = Y { setup :: YargsSetup
                 , read  :: Foreign -> F a
                 }
+
+unY :: forall a. Y a -> { setup :: YargsSetup, read  :: Foreign -> F a }
+unY (Y y) = y
 
 instance functorY :: Functor Y where
   (<$>) f (Y o) = Y { setup: o.setup, read: \value -> f <$> o.read value }
@@ -76,3 +81,15 @@ instance argNumbers :: Arg [Number] where
   arg key = Y { setup: mempty 
               , read: readOneOrMany key
               }
+
+yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Boolean -> Maybe String -> Y a
+yarg key aliases required needArg desc = 
+  let 
+    y = unY (arg key)
+  in Y { setup: y.setup <>
+                foldMap (\a -> alias    key a) aliases <>
+                foldMap (\m -> demand   key m) required <>
+                foldMap (\s -> describe key s) desc <>
+                if needArg then requiresArg key else mempty
+       , read: y.read
+       }

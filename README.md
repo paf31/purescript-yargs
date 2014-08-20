@@ -58,6 +58,8 @@
 
     runY :: forall a eff. YargsSetup -> Y (Eff eff a) -> Eff (console :: Console, err :: Exception | eff) a
 
+    yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Boolean -> Maybe String -> Y a
+
 
 ## Module Node.Yargs.Setup
 

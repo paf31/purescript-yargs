@@ -1,5 +1,6 @@
 module Main where
 
+import Data.Maybe
 import Data.Either
 import Data.Foreign
 
@@ -22,12 +23,7 @@ app (s : ss) true  = do
 
 main = do
   let setup = usage "$0 -w Word1 -w Word2" 
-                <> example "$0 -w Hello -w World" "Say hello!"
-	        <> alias "w" "word"
-                <> alias "r" "reverse"
-                <> demand "w" "At least one word is required"
-                <> requiresArg "w"
- 		<> describe "w" "A word"
-		<> describe "r" "Reverse the words"
-
-  runY setup (app <$> arg "w" <*> arg "r")
+              <> example "$0 -w Hello -w World" "Say hello!"
+  
+  runY setup $ app <$> yarg "w" ["word"] (Just "At least one word is required") true  (Just "A word") 
+                   <*> yarg "r" []       Nothing                                false (Just "Reverse the words")
