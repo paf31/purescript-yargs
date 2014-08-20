@@ -25,5 +25,5 @@ main = do
   let setup = usage "$0 -w Word1 -w Word2" 
               <> example "$0 -w Hello -w World" "Say hello!"
   
-  runY setup $ app <$> yarg "w" ["word"] (Just "At least one word is required") true  (Just "A word") 
-                   <*> yarg "r" []       Nothing                                false (Just "Reverse the words")
+  runY setup $ app <$> yarg "w" ["word"] (Just "A word") (Just "At least one word is required") false 
+                   <*> flag "r" []       (Just "Reverse the words")

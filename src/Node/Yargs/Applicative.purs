@@ -3,6 +3,7 @@ module Node.Yargs.Applicative
   , runY
   , Arg
   , yarg
+  , flag
   ) where
 
 import Data.Maybe
@@ -82,8 +83,8 @@ instance argNumbers :: Arg [Number] where
               , read: readOneOrMany key
               }
 
-yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Boolean -> Maybe String -> Y a
-yarg key aliases required needArg desc = 
+yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Maybe String -> Boolean -> Y a
+yarg key aliases desc required needArg = 
   let 
     y = unY (arg key)
   in Y { setup: y.setup <>
@@ -93,3 +94,6 @@ yarg key aliases required needArg desc =
                 if needArg then requiresArg key else mempty
        , read: y.read
        }
+
+flag :: forall a. (Arg a) => String -> [String] -> Maybe String -> Y a
+flag key aliases desc = yarg key aliases desc Nothing false
