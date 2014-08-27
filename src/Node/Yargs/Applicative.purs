@@ -84,7 +84,7 @@ instance argNumbers :: Arg [Number] where
               , read: readOneOrMany key
               }
 
-yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Maybe String -> Boolean -> Y a
+yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Either a String -> Boolean -> Y a
 yarg key aliases desc required needArg = 
   let 
     y = unY (arg key)
@@ -93,11 +93,13 @@ yarg key aliases desc required needArg =
                 foldMap (\m -> demand   key m) required <>
                 foldMap (\s -> describe key s) desc <>
                 if needArg then requiresArg key else mempty
-       , read: y.read
+       , read: case required of
+           Left def -> \value -> y.read value <|> pure def
+           _ -> y.read
        }
 
-flag :: forall a. (Arg a) => String -> [String] -> Maybe String -> Y a
-flag key aliases desc = yarg key aliases desc Nothing false
+flag :: forall a. String -> [String] -> Maybe String -> Y Boolean
+flag key aliases desc = yarg key aliases desc (Left false) false
 
 rest :: Y [Foreign]
 rest = Y { setup: mempty

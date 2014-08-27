@@ -56,13 +56,13 @@
 
 ### Values
 
-    flag :: forall a. (Arg a) => String -> [String] -> Maybe String -> Y a
+    flag :: forall a. String -> [String] -> Maybe String -> Y Boolean
 
     rest :: Y [Foreign]
 
     runY :: forall a eff. YargsSetup -> Y (Eff eff a) -> Eff (console :: Console, err :: Exception | eff) a
 
-    yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Maybe String -> Boolean -> Y a
+    yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Either a String -> Boolean -> Y a
 
 
 ## Module Node.Yargs.Setup
