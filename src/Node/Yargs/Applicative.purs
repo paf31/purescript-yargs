@@ -1,7 +1,7 @@
 module Node.Yargs.Applicative 
   ( Y()
   , runY
-  , Arg
+  , Arg, arg
   , yarg
   , flag
   , rest
