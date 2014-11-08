@@ -1,7 +1,7 @@
 module Node.Yargs.Applicative 
   ( Y()
   , runY
-  , Arg
+  , Arg, arg
   , yarg
   , flag
   , rest
@@ -40,7 +40,9 @@ instance applyT :: Apply Y where
 instance applicativeY :: Applicative Y where
   pure a = Y { setup: mempty, read: \_ -> pure a }
 
-runY :: forall a eff. YargsSetup -> Y (Eff eff a) -> Eff (err :: Exception, console :: Console | eff) a
+runY :: forall a eff. YargsSetup -> 
+                      Y (Eff (err :: Exception, yargs :: Console | eff) a) -> 
+                         Eff (err :: Exception, yargs :: Console | eff) a
 runY setup (Y y) = do
   value <- runYargs (setup <> y.setup)
   case y.read value of

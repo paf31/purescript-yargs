@@ -11,13 +11,13 @@
 
 ### Values
 
-    argv :: forall eff. Yargs -> Eff (console :: Console | eff) Foreign
+    argv :: forall eff. Yargs -> Eff (yargs :: Console | eff) Foreign
 
-    runYargs :: forall eff. YargsSetup -> Eff (console :: Console | eff) Foreign
+    runYargs :: forall eff. YargsSetup -> Eff (yargs :: Console | eff) Foreign
 
-    setupWith :: forall eff. YargsSetup -> Yargs -> Eff (console :: Console | eff) Yargs
+    setupWith :: forall eff. YargsSetup -> Yargs -> Eff (yargs :: Console | eff) Yargs
 
-    yargs :: forall eff. Eff (console :: Console | eff) Yargs
+    yargs :: forall eff. Eff (yargs :: Console | eff) Yargs
 
 
 ## Module Node.Yargs.Applicative
@@ -60,7 +60,7 @@
 
     rest :: Y [Foreign]
 
-    runY :: forall a eff. YargsSetup -> Y (Eff eff a) -> Eff (console :: Console, err :: Exception | eff) a
+    runY :: forall a eff. YargsSetup -> Y (Eff (yargs :: Console, err :: Exception | eff) a) -> Eff (yargs :: Console, err :: Exception | eff) a
 
     yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Either a String -> Boolean -> Y a
 
