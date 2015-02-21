@@ -2,109 +2,274 @@
 
 ## Module Node.Yargs
 
-### Types
+#### `Yargs`
 
-    data Console :: !
+``` purescript
+data Yargs :: *
+```
 
-    data Yargs :: *
+
+#### `Console`
+
+``` purescript
+data Console :: !
+```
 
 
-### Values
+#### `yargs`
 
-    argv :: forall eff. Yargs -> Eff (yargs :: Console | eff) Foreign
+``` purescript
+yargs :: forall eff. Eff (yargs :: Console | eff) Yargs
+```
 
-    runYargs :: forall eff. YargsSetup -> Eff (yargs :: Console | eff) Foreign
 
-    setupWith :: forall eff. YargsSetup -> Yargs -> Eff (yargs :: Console | eff) Yargs
+#### `setupWith`
 
-    yargs :: forall eff. Eff (yargs :: Console | eff) Yargs
+``` purescript
+setupWith :: forall eff. YargsSetup -> Yargs -> Eff (yargs :: Console | eff) Yargs
+```
+
+
+#### `argv`
+
+``` purescript
+argv :: forall eff. Yargs -> Eff (yargs :: Console | eff) Foreign
+```
+
+
+#### `runYargs`
+
+``` purescript
+runYargs :: forall eff. YargsSetup -> Eff (yargs :: Console | eff) Foreign
+```
+
 
 
 ## Module Node.Yargs.Applicative
 
-### Types
+#### `Y`
 
-    newtype Y a
-
-
-### Type Classes
-
-    class Arg a where
-      arg :: String -> Y a
+``` purescript
+newtype Y a
+```
 
 
-### Type Class Instances
+#### `functorY`
 
-    instance applicativeY :: Applicative Y
-
-    instance applyT :: Apply Y
-
-    instance argBoolean :: Arg Boolean
-
-    instance argBooleans :: Arg [Boolean]
-
-    instance argNumber :: Arg Number
-
-    instance argNumbers :: Arg [Number]
-
-    instance argString :: Arg String
-
-    instance argStrings :: Arg [String]
-
-    instance functorY :: Functor Y
+``` purescript
+instance functorY :: Functor Y
+```
 
 
-### Values
+#### `applyT`
 
-    flag :: forall a. String -> [String] -> Maybe String -> Y Boolean
+``` purescript
+instance applyT :: Apply Y
+```
 
-    rest :: Y [Foreign]
 
-    runY :: forall a eff. YargsSetup -> Y (Eff (yargs :: Console, err :: Exception | eff) a) -> Eff (yargs :: Console, err :: Exception | eff) a
+#### `applicativeY`
 
-    yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Either a String -> Boolean -> Y a
+``` purescript
+instance applicativeY :: Applicative Y
+```
+
+
+#### `runY`
+
+``` purescript
+runY :: forall a eff. YargsSetup -> Y (Eff (yargs :: Console, err :: Exception | eff) a) -> Eff (yargs :: Console, err :: Exception | eff) a
+```
+
+
+#### `Arg`
+
+``` purescript
+class Arg a where
+  arg :: String -> Y a
+```
+
+
+#### `argString`
+
+``` purescript
+instance argString :: Arg String
+```
+
+
+#### `argBoolean`
+
+``` purescript
+instance argBoolean :: Arg Boolean
+```
+
+
+#### `argNumber`
+
+``` purescript
+instance argNumber :: Arg Number
+```
+
+
+#### `argStrings`
+
+``` purescript
+instance argStrings :: Arg [String]
+```
+
+
+#### `argBooleans`
+
+``` purescript
+instance argBooleans :: Arg [Boolean]
+```
+
+
+#### `argNumbers`
+
+``` purescript
+instance argNumbers :: Arg [Number]
+```
+
+
+#### `yarg`
+
+``` purescript
+yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Either a String -> Boolean -> Y a
+```
+
+
+#### `flag`
+
+``` purescript
+flag :: forall a. String -> [String] -> Maybe String -> Y Boolean
+```
+
+
+#### `rest`
+
+``` purescript
+rest :: Y [Foreign]
+```
+
 
 
 ## Module Node.Yargs.Setup
 
-### Types
+#### `YargsSetup`
 
-    data YargsSetup :: *
-
-
-### Type Class Instances
-
-    instance monoidYargsSetup :: Monoid YargsSetup
-
-    instance semigroupYargsSetup :: Semigroup YargsSetup
+``` purescript
+data YargsSetup :: *
+```
 
 
-### Values
+#### `semigroupYargsSetup`
 
-    alias :: String -> String -> YargsSetup
+``` purescript
+instance semigroupYargsSetup :: Semigroup YargsSetup
+```
 
-    boolean :: String -> YargsSetup
 
-    config :: String -> YargsSetup
+#### `monoidYargsSetup`
 
-    demand :: String -> String -> YargsSetup
+``` purescript
+instance monoidYargsSetup :: Monoid YargsSetup
+```
 
-    describe :: String -> String -> YargsSetup
 
-    example :: String -> String -> YargsSetup
+#### `usage`
 
-    help :: String -> String -> YargsSetup
+``` purescript
+usage :: String -> YargsSetup
+```
 
-    requiresArg :: String -> YargsSetup
 
-    showHelpOnFail :: Boolean -> String -> YargsSetup
+#### `example`
 
-    strict :: YargsSetup
+``` purescript
+example :: String -> String -> YargsSetup
+```
 
-    string :: String -> YargsSetup
 
-    usage :: String -> YargsSetup
+#### `alias`
 
-    version :: String -> String -> String -> YargsSetup
+``` purescript
+alias :: String -> String -> YargsSetup
+```
 
-    wrap :: Number -> YargsSetup
+
+#### `demand`
+
+``` purescript
+demand :: String -> String -> YargsSetup
+```
+
+
+#### `requiresArg`
+
+``` purescript
+requiresArg :: String -> YargsSetup
+```
+
+
+#### `describe`
+
+``` purescript
+describe :: String -> String -> YargsSetup
+```
+
+
+#### `boolean`
+
+``` purescript
+boolean :: String -> YargsSetup
+```
+
+
+#### `string`
+
+``` purescript
+string :: String -> YargsSetup
+```
+
+
+#### `config`
+
+``` purescript
+config :: String -> YargsSetup
+```
+
+
+#### `wrap`
+
+``` purescript
+wrap :: Number -> YargsSetup
+```
+
+
+#### `strict`
+
+``` purescript
+strict :: YargsSetup
+```
+
+
+#### `help`
+
+``` purescript
+help :: String -> String -> YargsSetup
+```
+
+
+#### `version`
+
+``` purescript
+version :: String -> String -> String -> YargsSetup
+```
+
+
+#### `showHelpOnFail`
+
+``` purescript
+showHelpOnFail :: Boolean -> String -> YargsSetup
+```
