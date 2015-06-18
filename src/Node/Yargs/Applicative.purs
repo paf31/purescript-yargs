@@ -7,6 +7,8 @@ module Node.Yargs.Applicative
   , rest
   ) where
 
+import Prelude
+
 import Data.Maybe
 import Data.Foreign
 import Data.Foreign.Class
@@ -19,21 +21,22 @@ import Node.Yargs.Setup
 
 import Control.Monad.Eff
 import Control.Monad.Eff.Unsafe
+import Control.Monad.Eff.Console (CONSOLE())
 import Control.Monad.Eff.Exception
-import Control.Alt ((<|>))
+import Control.Alt
 
 newtype Y a = Y { setup :: YargsSetup
                 , read  :: Foreign -> F a
                 }
 
-unY :: forall a. Y a -> { setup :: YargsSetup, read  :: Foreign -> F a }
+unY :: forall a. Y a -> { setup :: YargsSetup, read :: Foreign -> F a }
 unY (Y y) = y
 
 instance functorY :: Functor Y where
-  (<$>) f (Y o) = Y { setup: o.setup, read: \value -> f <$> o.read value }
+  map f (Y o) = Y { setup: o.setup, read: \value -> f <$> o.read value }
 
 instance applyT :: Apply Y where
-  (<*>) (Y o1) (Y o2) = Y { setup: o1.setup <> o2.setup
+  apply (Y o1) (Y o2) = Y { setup: o1.setup <> o2.setup
                           , read: \value -> o1.read value <*> o2.read value
                           }
 
@@ -41,8 +44,8 @@ instance applicativeY :: Applicative Y where
   pure a = Y { setup: mempty, read: \_ -> pure a }
 
 runY :: forall a eff. YargsSetup -> 
-                      Y (Eff (err :: Exception, yargs :: Console | eff) a) -> 
-                         Eff (err :: Exception, yargs :: Console | eff) a
+                      Y (Eff (err :: EXCEPTION, console :: CONSOLE | eff) a) -> 
+                         Eff (err :: EXCEPTION, console :: CONSOLE | eff) a
 runY setup (Y y) = do
   value <- runYargs (setup <> y.setup)
   case y.read value of
@@ -67,26 +70,26 @@ instance argNumber :: Arg Number where
               , read: readProp key
               }
 
-readOneOrMany :: forall a. (IsForeign a) => String -> Foreign -> F [a]
+readOneOrMany :: forall a. (IsForeign a) => String -> Foreign -> F (Array a)
 readOneOrMany key value = (pure <$> readProp key value)
                                 <|> readProp key value 
 
-instance argStrings :: Arg [String] where
+instance argStrings :: Arg (Array String) where
   arg key = Y { setup: string key 
               , read: readOneOrMany key
               }
 
-instance argBooleans :: Arg [Boolean] where
+instance argBooleans :: Arg (Array Boolean) where
   arg key = Y { setup: boolean key 
               , read: readOneOrMany key
               }
 	      
-instance argNumbers :: Arg [Number] where
+instance argNumbers :: Arg (Array Number) where
   arg key = Y { setup: mempty 
               , read: readOneOrMany key
               }
 
-yarg :: forall a. (Arg a) => String -> [String] -> Maybe String -> Either a String -> Boolean -> Y a
+yarg :: forall a. (Arg a) => String -> Array String -> Maybe String -> Either a String -> Boolean -> Y a
 yarg key aliases desc required needArg = 
   let 
     y = unY (arg key)
@@ -100,10 +103,10 @@ yarg key aliases desc required needArg =
            _ -> y.read
        }
 
-flag :: forall a. String -> [String] -> Maybe String -> Y Boolean
+flag :: forall a. String -> Array String -> Maybe String -> Y Boolean
 flag key aliases desc = yarg key aliases desc (Left false) false
 
-rest :: Y [Foreign]
+rest :: Y (Array Foreign)
 rest = Y { setup: mempty
          , read: readArray
          }

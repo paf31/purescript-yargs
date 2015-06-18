@@ -17,9 +17,10 @@
     "package.json"
   ],
   "dependencies": {
-    "purescript-foreign": "~0.4.0",
-    "purescript-exceptions": "~0.2.1",
-    "purescript-easy-ffi": "~1.0.1",
-    "purescript-either": "~0.1.3"
+    "purescript-foreign": "^0.5.0",
+    "purescript-exceptions": "^0.3.0",
+    "purescript-easy-ffi": "master",
+    "purescript-either": "^0.2.0",
+    "purescript-console": "^0.1.0"
   }
 }

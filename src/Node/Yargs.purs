@@ -1,35 +1,32 @@
 module Node.Yargs 
   ( Yargs()
-  , Console()
-  
+   
   , yargs
   , runYargs
   , argv
   , setupWith
   ) where
 
+import Prelude
+
 import Data.Foreign
 import Data.Foreign.EasyFFI
 
 import Control.Monad.Eff
+import Control.Monad.Eff.Console
 
 import Node.Yargs.Setup
 
 foreign import data Yargs :: *
 
-foreign import data Console :: !
+foreign import yargs :: forall eff. Eff (console :: CONSOLE | eff) Yargs
 
-foreign import yargs
-  "function yargs() {\
-  \  return require('yargs');\
-  \}" :: forall eff. Eff (yargs :: Console | eff) Yargs
-
-setupWith :: forall eff. YargsSetup -> Yargs -> Eff (yargs :: Console | eff) Yargs 
+setupWith :: forall eff. YargsSetup -> Yargs -> Eff (console :: CONSOLE | eff) Yargs 
 setupWith = unsafeForeignFunction ["setup", "y", ""] "setup(y)"
 
-argv :: forall eff. Yargs -> Eff (yargs :: Console | eff) Foreign
+argv :: forall eff. Yargs -> Eff (console :: CONSOLE | eff) Foreign
 argv = unsafeForeignFunction ["y", ""] "y.argv"
 
-runYargs :: forall eff. YargsSetup -> Eff (yargs :: Console | eff) Foreign
+runYargs :: forall eff. YargsSetup -> Eff (console :: CONSOLE | eff) Foreign
 runYargs setup = yargs >>= setupWith setup >>= argv
 

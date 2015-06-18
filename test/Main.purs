@@ -1,6 +1,9 @@
-module Main where
+module Test.Main where
+
+import Prelude
 
 import Data.Maybe
+import Data.Array (reverse)
 import Data.Either
 import Data.Foreign
 
@@ -8,18 +11,13 @@ import Node.Yargs
 import Node.Yargs.Setup
 import Node.Yargs.Applicative
 
-import Debug.Trace
-
 import Control.Monad.Eff
+import Control.Monad.Eff.Console
 
-app :: forall eff. [String] -> Boolean -> Eff (trace :: Trace | eff) Unit
-app []       _     = return unit
-app (s : ss) false = do
-  trace s
-  app ss false
-app (s : ss) true  = do
-  app ss true
-  trace s
+app :: forall eff. Array String -> Boolean -> Eff (console :: CONSOLE | eff) Unit
+app [] _     = return unit
+app ss false = print ss
+app ss true  = print (reverse ss)
 
 main = do
   let setup = usage "$0 -w Word1 -w Word2" 

@@ -16,6 +16,8 @@ module Node.Yargs.Setup
   , showHelpOnFail
   ) where
 
+import Prelude
+
 import Data.Monoid
 import Data.Foreign.EasyFFI
 
@@ -24,7 +26,7 @@ import Control.Monad.Eff
 foreign import data YargsSetup :: *
 
 instance semigroupYargsSetup :: Semigroup YargsSetup where
-  (<>) = unsafeForeignFunction ["s1", "s2", "y"] "s2(s1(y))"
+  append = unsafeForeignFunction ["s1", "s2", "y"] "s2(s1(y))"
 
 instance monoidYargsSetup :: Monoid YargsSetup where
   mempty = unsafeForeignFunction ["y"] "y"
