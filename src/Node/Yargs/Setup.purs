@@ -19,56 +19,58 @@ module Node.Yargs.Setup
 import Prelude
 
 import Data.Monoid
-import Data.Foreign.EasyFFI
+import Data.Function
 
 import Control.Monad.Eff
+
+import Unsafe.Coerce
 
 foreign import data YargsSetup :: *
 
 instance semigroupYargsSetup :: Semigroup YargsSetup where
-  append = unsafeForeignFunction ["s1", "s2", "y"] "s2(s1(y))"
+  append s1 s2 = unsafeCoerce \y -> unsafeCoerce s2 (unsafeCoerce s1 y)
 
 instance monoidYargsSetup :: Monoid YargsSetup where
-  mempty = unsafeForeignFunction ["y"] "y"
+  mempty = unsafeCoerce \y -> y
 
 usage :: String -> YargsSetup
-usage = unsafeForeignFunction ["msg", "y"] "y.usage(msg)"
+usage msg = unsafeCoerce \y -> y.usage msg
 
 example :: String -> String -> YargsSetup
-example = unsafeForeignFunction ["cmd", "desc", "y"] "y.example(cmd, desc)"
+example cmd desc = unsafeCoerce \y -> runFn2 y.example cmd desc
 
 alias :: String -> String -> YargsSetup
-alias = unsafeForeignFunction ["key", "alias", "y"] "y.alias(key, alias)"
+alias key a = unsafeCoerce \y -> runFn2 y.alias key a
 
 demand :: String -> String -> YargsSetup
-demand = unsafeForeignFunction ["key", "msg", "y"] "y.demand(key, msg)"
+demand key msg = unsafeCoerce \y -> runFn2 y.demand key msg
 
 requiresArg :: String -> YargsSetup
-requiresArg = unsafeForeignFunction ["key", "y"] "y.requiresArg(key)"
+requiresArg key = unsafeCoerce \y -> y.requiresArg key
 
 describe :: String -> String -> YargsSetup
-describe = unsafeForeignFunction ["key", "desc", "y"] "y.describe(key, desc)"
+describe key desc = unsafeCoerce \y -> runFn2 y.describe key desc
 
 boolean :: String -> YargsSetup
-boolean = unsafeForeignFunction ["key", "y"] "y.boolean(key)"
+boolean key = unsafeCoerce \y -> y.boolean key
 
 string :: String -> YargsSetup
-string = unsafeForeignFunction ["key", "y"] "y.string(key)"
+string key = unsafeCoerce \y -> y.string key
 
 config :: String -> YargsSetup
-config = unsafeForeignFunction ["key", "y"] "y.config(key)"
+config key = unsafeCoerce \y -> y.config key
 
 wrap :: Number -> YargsSetup
-wrap = unsafeForeignFunction ["cols", "y"] "y.wrap(cols)"
+wrap cols = unsafeCoerce \y -> y.wrap cols
 
 strict :: YargsSetup
-strict = unsafeForeignFunction ["y"] "y.strict()"
+strict = unsafeCoerce \y -> runFn0 y.strict
 
 help :: String -> String -> YargsSetup
-help = unsafeForeignFunction ["key", "desc"] "y.help(key, desc)"
+help key desc = unsafeCoerce \y -> runFn2 y.help key desc
 
 version :: String -> String -> String -> YargsSetup
-version = unsafeForeignFunction ["version", "key", "desc", "y"] "y.version(version, key, desc)"
+version v key desc = unsafeCoerce \y -> runFn3 y.version v key desc
 
 showHelpOnFail :: Boolean -> String -> YargsSetup
-showHelpOnFail = unsafeForeignFunction ["enable", "msg", "y"] "y.showHelpOnFail(enable, msg)"
+showHelpOnFail enable msg = unsafeCoerce \y -> runFn2 y.showHelpOnFail enable msg

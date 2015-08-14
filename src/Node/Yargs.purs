@@ -10,22 +10,21 @@ module Node.Yargs
 import Prelude
 
 import Data.Foreign
-import Data.Foreign.EasyFFI
 
 import Control.Monad.Eff
 import Control.Monad.Eff.Console
 
 import Node.Yargs.Setup
 
+import Unsafe.Coerce
+
 foreign import data Yargs :: *
 
 foreign import yargs :: forall eff. Eff (console :: CONSOLE | eff) Yargs
 
-setupWith :: forall eff. YargsSetup -> Yargs -> Eff (console :: CONSOLE | eff) Yargs 
-setupWith = unsafeForeignFunction ["setup", "y", ""] "setup(y)"
+foreign import setupWith :: forall eff. YargsSetup -> Yargs -> Eff (console :: CONSOLE | eff) Yargs 
 
-argv :: forall eff. Yargs -> Eff (console :: CONSOLE | eff) Foreign
-argv = unsafeForeignFunction ["y", ""] "y.argv"
+foreign import argv :: forall eff. Yargs -> Eff (console :: CONSOLE | eff) Foreign
 
 runYargs :: forall eff. YargsSetup -> Eff (console :: CONSOLE | eff) Foreign
 runYargs setup = yargs >>= setupWith setup >>= argv
