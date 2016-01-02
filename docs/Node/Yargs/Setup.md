@@ -36,6 +36,12 @@ alias :: String -> String -> YargsSetup
 demand :: String -> String -> YargsSetup
 ```
 
+#### `demandCount`
+
+``` purescript
+demandCount :: Int -> String -> YargsSetup
+```
+
 #### `requiresArg`
 
 ``` purescript

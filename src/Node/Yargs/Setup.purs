@@ -4,6 +4,7 @@ module Node.Yargs.Setup
   , example
   , alias
   , demand
+  , demandCount
   , requiresArg
   , describe
   , boolean
@@ -44,6 +45,9 @@ alias key a = unsafeCoerce \y -> runFn2 y.alias key a
 
 demand :: String -> String -> YargsSetup
 demand key msg = unsafeCoerce \y -> runFn2 y.demand key msg
+
+demandCount :: Int -> String -> YargsSetup
+demandCount count desc = unsafeCoerce \y -> runFn2 y.demand count desc
 
 requiresArg :: String -> YargsSetup
 requiresArg key = unsafeCoerce \y -> y.requiresArg key
