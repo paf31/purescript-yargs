@@ -16,8 +16,6 @@ import Control.Monad.Eff.Console
 
 import Node.Yargs.Setup
 
-import Unsafe.Coerce
-
 foreign import data Yargs :: *
 
 foreign import yargs :: forall eff. Eff (console :: CONSOLE | eff) Yargs
