@@ -1,0 +1,24 @@
+{
+  "name": "purescript-yargs",
+  "description": "PureScript bindings for the yargs command-line parsing library",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paf31/purescript-yargs.git"
+  },
+  "author": "Phil Freeman <paf31@cantab.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/paf31/purescript-yargs/issues"
+  },
+  "homepage": "https://github.com/paf31/purescript-yargs#readme",
+  "dependencies": {
+    "yargs": "^3.31.0"
+  }
+}
