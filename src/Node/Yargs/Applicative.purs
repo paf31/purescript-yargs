@@ -103,7 +103,7 @@ yarg key aliases desc required needArg =
            _ -> y.read
        }
 
-flag :: forall a. String -> Array String -> Maybe String -> Y Boolean
+flag :: String -> Array String -> Maybe String -> Y Boolean
 flag key aliases desc = yarg key aliases desc (Left false) false
 
 rest :: Y (Array Foreign)

@@ -22,8 +22,6 @@ import Prelude
 import Data.Monoid
 import Data.Function
 
-import Control.Monad.Eff
-
 import Unsafe.Coerce
 
 foreign import data YargsSetup :: *
