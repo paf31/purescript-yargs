@@ -1,29 +1,27 @@
-module Node.Yargs.Applicative 
+module Node.Yargs.Applicative
   ( Y()
   , runY
-  , Arg, arg
+  , class Arg
+  , arg
   , yarg
   , flag
   , rest
   ) where
 
 import Prelude
-
-import Data.Maybe
-import Data.Foreign
-import Data.Foreign.Class
-import Data.Monoid
-import Data.Either
+import Data.Maybe (Maybe)
+import Data.Foreign (Foreign, F, readArray)
+import Data.Foreign.Class (class IsForeign, readProp)
+import Data.Monoid (mempty)
+import Data.Either (Either(Left, Right))
+import Node.Yargs (runYargs)
+import Node.Yargs.Setup (YargsSetup, requiresArg, describe, demand, alias, boolean, string)
+import Control.Alt ((<|>))
+import Control.Monad.Eff (Eff)
+import Control.Monad.Eff.Console (CONSOLE)
+import Control.Monad.Eff.Exception (EXCEPTION, error, throwException)
+import Control.Monad.Eff.Unsafe (unsafeInterleaveEff)
 import Data.Foldable (foldMap)
-
-import Node.Yargs
-import Node.Yargs.Setup
-
-import Control.Monad.Eff
-import Control.Monad.Eff.Unsafe
-import Control.Monad.Eff.Console (CONSOLE())
-import Control.Monad.Eff.Exception
-import Control.Alt
 
 newtype Y a = Y { setup :: YargsSetup
                 , read  :: Foreign -> F a
@@ -43,8 +41,8 @@ instance applyT :: Apply Y where
 instance applicativeY :: Applicative Y where
   pure a = Y { setup: mempty, read: \_ -> pure a }
 
-runY :: forall a eff. YargsSetup -> 
-                      Y (Eff (err :: EXCEPTION, console :: CONSOLE | eff) a) -> 
+runY :: forall a eff. YargsSetup ->
+                      Y (Eff (err :: EXCEPTION, console :: CONSOLE | eff) a) ->
                          Eff (err :: EXCEPTION, console :: CONSOLE | eff) a
 runY setup (Y y) = do
   value <- runYargs (setup <> y.setup)
@@ -56,42 +54,42 @@ class Arg a where
   arg :: String -> Y a
 
 instance argString :: Arg String where
-  arg key = Y { setup: string key 
+  arg key = Y { setup: string key
               , read: readProp key
               }
 
 instance argBoolean :: Arg Boolean where
-  arg key = Y { setup: boolean key 
+  arg key = Y { setup: boolean key
               , read: readProp key
               }
-	      
+
 instance argNumber :: Arg Number where
-  arg key = Y { setup: mempty 
+  arg key = Y { setup: mempty
               , read: readProp key
               }
 
 readOneOrMany :: forall a. (IsForeign a) => String -> Foreign -> F (Array a)
 readOneOrMany key value = (pure <$> readProp key value)
-                                <|> readProp key value 
+                                <|> readProp key value
 
 instance argStrings :: Arg (Array String) where
-  arg key = Y { setup: string key 
+  arg key = Y { setup: string key
               , read: readOneOrMany key
               }
 
 instance argBooleans :: Arg (Array Boolean) where
-  arg key = Y { setup: boolean key 
+  arg key = Y { setup: boolean key
               , read: readOneOrMany key
               }
-	      
+
 instance argNumbers :: Arg (Array Number) where
-  arg key = Y { setup: mempty 
+  arg key = Y { setup: mempty
               , read: readOneOrMany key
               }
 
 yarg :: forall a. (Arg a) => String -> Array String -> Maybe String -> Either a String -> Boolean -> Y a
-yarg key aliases desc required needArg = 
-  let 
+yarg key aliases desc required needArg =
+  let
     y = unY (arg key)
   in Y { setup: y.setup <>
                 foldMap (\a -> alias    key a) aliases <>

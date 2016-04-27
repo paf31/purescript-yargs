@@ -1,4 +1,4 @@
-module Node.Yargs.Setup 
+module Node.Yargs.Setup
   ( YargsSetup()
   , usage
   , example
@@ -13,16 +13,16 @@ module Node.Yargs.Setup
   , wrap
   , strict
   , help
+  , defaultHelp
   , version
+  , defaultVersion
   , showHelpOnFail
   ) where
 
 import Prelude
-
-import Data.Monoid
-import Data.Function
-
-import Unsafe.Coerce
+import Data.Function (runFn2, runFn3, runFn0)
+import Data.Monoid (class Monoid)
+import Unsafe.Coerce (unsafeCoerce)
 
 foreign import data YargsSetup :: *
 
@@ -71,8 +71,17 @@ strict = unsafeCoerce \y -> runFn0 y.strict
 help :: String -> String -> YargsSetup
 help key desc = unsafeCoerce \y -> runFn2 y.help key desc
 
+-- | Will make --help the option to trigger help output
+defaultHelp :: YargsSetup
+defaultHelp = unsafeCoerce \y -> runFn0 y.help
+
 version :: String -> String -> String -> YargsSetup
 version v key desc = unsafeCoerce \y -> runFn3 y.version v key desc
+
+-- | Tries to find your package.json and parse the "version" field
+-- | Will make --version the option to trigger version output
+defaultVersion :: YargsSetup
+defaultVersion = unsafeCoerce \y -> runFn0 y.version
 
 showHelpOnFail :: Boolean -> String -> YargsSetup
 showHelpOnFail enable msg = unsafeCoerce \y -> runFn2 y.showHelpOnFail enable msg

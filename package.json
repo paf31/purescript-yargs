@@ -22,7 +22,7 @@
     "yargs": "^3.31.0"
   },
   "devDependencies": {
-    "pulp": "^7.0.0",
-    "purescript": "^0.7.6"
+    "pulp": "^8.0.0",
+    "purescript": "^0.8.5"
   }
 }
