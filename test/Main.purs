@@ -14,9 +14,9 @@ import Control.Monad.Eff.Console
 import Control.Monad.Eff.Exception (EXCEPTION())
 
 app :: forall eff. Array String -> Boolean -> Eff (console :: CONSOLE | eff) Unit
-app [] _     = return unit
-app ss false = print ss
-app ss true  = print (reverse ss)
+app [] _     = pure unit
+app ss false = logShow ss
+app ss true  = logShow (reverse ss)
 
 main :: forall eff. Eff ( console :: CONSOLE, err :: EXCEPTION | eff) Unit
 main = do
