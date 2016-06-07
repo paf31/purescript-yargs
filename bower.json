@@ -21,10 +21,10 @@
     "url": "git://github.com/paf31/purescript-yargs.git"
   },
   "dependencies": {
-    "purescript-unsafe-coerce": "~1.0.0",
-    "purescript-foreign": "~1.0.0",
-    "purescript-either": "~1.0.0",
-    "purescript-console": "~1.0.0",
-    "purescript-exceptions": "~1.0.0"
+    "purescript-unsafe-coerce": "^1.0.0",
+    "purescript-foreign": "^1.0.0",
+    "purescript-either": "^1.0.0",
+    "purescript-console": "^1.0.0",
+    "purescript-exceptions": "^1.0.0"
   }
 }

@@ -20,6 +20,7 @@ module Node.Yargs.Setup
   ) where
 
 import Prelude
+
 import Data.Function.Uncurried (runFn2, runFn3, runFn0)
 import Data.Monoid (class Monoid)
 import Unsafe.Coerce (unsafeCoerce)

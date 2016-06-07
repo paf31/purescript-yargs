@@ -8,8 +8,8 @@ data YargsSetup :: *
 
 ##### Instances
 ``` purescript
-instance semigroupYargsSetup :: Semigroup YargsSetup
-instance monoidYargsSetup :: Monoid YargsSetup
+Semigroup YargsSetup
+Monoid YargsSetup
 ```
 
 #### `usage`
@@ -90,11 +90,28 @@ strict :: YargsSetup
 help :: String -> String -> YargsSetup
 ```
 
+#### `defaultHelp`
+
+``` purescript
+defaultHelp :: YargsSetup
+```
+
+Will make --help the option to trigger help output
+
 #### `version`
 
 ``` purescript
 version :: String -> String -> String -> YargsSetup
 ```
+
+#### `defaultVersion`
+
+``` purescript
+defaultVersion :: YargsSetup
+```
+
+Tries to find your package.json and parse the "version" field
+Will make --version the option to trigger version output
 
 #### `showHelpOnFail`
 

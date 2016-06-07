@@ -8,9 +8,9 @@ newtype Y a
 
 ##### Instances
 ``` purescript
-instance functorY :: Functor Y
-instance applyT :: Apply Y
-instance applicativeY :: Applicative Y
+Functor Y
+Apply Y
+Applicative Y
 ```
 
 #### `runY`
@@ -28,24 +28,24 @@ class Arg a where
 
 ##### Instances
 ``` purescript
-instance argString :: Arg String
-instance argBoolean :: Arg Boolean
-instance argNumber :: Arg Number
-instance argStrings :: Arg (Array String)
-instance argBooleans :: Arg (Array Boolean)
-instance argNumbers :: Arg (Array Number)
+Arg String
+Arg Boolean
+Arg Number
+Arg (Array String)
+Arg (Array Boolean)
+Arg (Array Number)
 ```
 
 #### `yarg`
 
 ``` purescript
-yarg :: forall a. (Arg a) => String -> Array String -> Maybe String -> Either a String -> Boolean -> Y a
+yarg :: forall a. Arg a => String -> Array String -> Maybe String -> Either a String -> Boolean -> Y a
 ```
 
 #### `flag`
 
 ``` purescript
-flag :: forall a. String -> Array String -> Maybe String -> Y Boolean
+flag :: String -> Array String -> Maybe String -> Y Boolean
 ```
 
 #### `rest`

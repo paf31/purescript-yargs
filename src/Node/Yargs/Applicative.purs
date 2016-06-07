@@ -9,19 +9,20 @@ module Node.Yargs.Applicative
   ) where
 
 import Prelude
-import Data.Maybe (Maybe)
-import Data.Foreign (Foreign, F, readArray)
-import Data.Foreign.Class (class IsForeign, readProp)
-import Data.Monoid (mempty)
-import Data.Either (Either(Left, Right))
-import Node.Yargs (runYargs)
-import Node.Yargs.Setup (YargsSetup, requiresArg, describe, demand, alias, boolean, string)
+
 import Control.Alt ((<|>))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE)
 import Control.Monad.Eff.Exception (EXCEPTION, error, throwException)
 import Control.Monad.Eff.Unsafe (unsafeInterleaveEff)
+import Data.Either (Either(Left, Right))
 import Data.Foldable (foldMap)
+import Data.Foreign (Foreign, F, readArray)
+import Data.Foreign.Class (class IsForeign, readProp)
+import Data.Maybe (Maybe)
+import Data.Monoid (mempty)
+import Node.Yargs (runYargs)
+import Node.Yargs.Setup (YargsSetup, requiresArg, describe, demand, alias, boolean, string)
 
 newtype Y a = Y { setup :: YargsSetup
                 , read  :: Foreign -> F a
