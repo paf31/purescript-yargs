@@ -25,6 +25,17 @@ import Data.Function.Uncurried (runFn2, runFn3, runFn0)
 import Data.Monoid (class Monoid)
 import Unsafe.Coerce (unsafeCoerce)
 
+-- | A value which can be used to configure the `yargs` module.
+-- |
+-- | The `Semigroup` and `Monoid` instances can be used to combine the various
+-- | options, which are made available as functions by this module:
+-- |
+-- | ```purescript
+-- | setup = fold
+-- |   [ usage "$0 -w Word1 -w Word2"
+-- |   , example "$0 -w Hello -w World" "Say hello!"
+-- |   ]
+-- | ```
 foreign import data YargsSetup :: *
 
 instance semigroupYargsSetup :: Semigroup YargsSetup where
@@ -33,9 +44,11 @@ instance semigroupYargsSetup :: Semigroup YargsSetup where
 instance monoidYargsSetup :: Monoid YargsSetup where
   mempty = unsafeCoerce \y -> y
 
+-- | Provide a usage message.
 usage :: String -> YargsSetup
 usage msg = unsafeCoerce \y -> y.usage msg
 
+-- | Provide an example command and description.
 example :: String -> String -> YargsSetup
 example cmd desc = unsafeCoerce \y -> runFn2 y.example cmd desc
 
@@ -72,7 +85,7 @@ strict = unsafeCoerce \y -> runFn0 y.strict
 help :: String -> String -> YargsSetup
 help key desc = unsafeCoerce \y -> runFn2 y.help key desc
 
--- | Will make --help the option to trigger help output
+-- | Will make `--help` the option to trigger help output
 defaultHelp :: YargsSetup
 defaultHelp = unsafeCoerce \y -> runFn0 y.help
 
@@ -80,7 +93,7 @@ version :: String -> String -> String -> YargsSetup
 version v key desc = unsafeCoerce \y -> runFn3 y.version v key desc
 
 -- | Tries to find your package.json and parse the "version" field
--- | Will make --version the option to trigger version output
+-- | Will make `--version` the option to trigger version output
 defaultVersion :: YargsSetup
 defaultVersion = unsafeCoerce \y -> runFn0 y.version
 

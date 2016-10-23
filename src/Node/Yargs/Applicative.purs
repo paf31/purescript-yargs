@@ -1,5 +1,5 @@
 module Node.Yargs.Applicative
-  ( Y()
+  ( Y
   , runY
   , class Arg
   , arg
@@ -24,9 +24,13 @@ import Data.Monoid (mempty)
 import Node.Yargs (runYargs)
 import Node.Yargs.Setup (YargsSetup, requiresArg, describe, demand, alias, boolean, string)
 
-newtype Y a = Y { setup :: YargsSetup
-                , read  :: Foreign -> F a
-                }
+-- | The `Y` applicative functor can be used to build values from
+-- | command-line arguments, providing a more idiomatic interface to
+-- | the `yargs` library.
+newtype Y a = Y
+  { setup :: YargsSetup
+  , read  :: Foreign -> F a
+  }
 
 unY :: forall a. Y a -> { setup :: YargsSetup, read :: Foreign -> F a }
 unY (Y y) = y
@@ -42,6 +46,9 @@ instance applyT :: Apply Y where
 instance applicativeY :: Applicative Y where
   pure a = Y { setup: mempty, read: \_ -> pure a }
 
+-- | Compute some `Eff` action using command-line arguments, and run it.
+-- |
+-- | This function can throw exceptions.
 runY :: forall a eff. YargsSetup ->
                       Y (Eff (err :: EXCEPTION, console :: CONSOLE | eff) a) ->
                          Eff (err :: EXCEPTION, console :: CONSOLE | eff) a
@@ -51,6 +58,7 @@ runY setup (Y y) = do
     Left err -> throwException (error (show err))
     Right action -> action
 
+-- | The `Arg` class describes types which can be parsed from the command line.
 class Arg a where
   arg :: String -> Y a
 
@@ -69,7 +77,7 @@ instance argNumber :: Arg Number where
               , read: readProp key
               }
 
-readOneOrMany :: forall a. (IsForeign a) => String -> Foreign -> F (Array a)
+readOneOrMany :: forall a. IsForeign a => String -> Foreign -> F (Array a)
 readOneOrMany key value = (pure <$> readProp key value)
                                 <|> readProp key value
 
@@ -88,7 +96,24 @@ instance argNumbers :: Arg (Array Number) where
               , read: readOneOrMany key
               }
 
-yarg :: forall a. (Arg a) => String -> Array String -> Maybe String -> Either a String -> Boolean -> Y a
+-- | Describe a single command line argument.
+-- |
+-- | The arguments are, in order:
+-- |
+-- | - The key name and default argument name
+-- | - Any aliases which can be used in place of the key
+-- | - An optional description
+-- | - Either a default value or a message to show if this field is required
+-- | - Whether or not an associated value is required
+yarg
+  :: forall a
+   . Arg a
+  => String
+  -> Array String
+  -> Maybe String
+  -> Either a String
+  -> Boolean
+  -> Y a
 yarg key aliases desc required needArg =
   let
     y = unY (arg key)
@@ -102,9 +127,17 @@ yarg key aliases desc required needArg =
            _ -> y.read
        }
 
+-- | Describe a boolean-valued flag.
+-- |
+-- | The arguments are, in order:
+-- |
+-- | - The key name and default argument name
+-- | - Any aliases which can be used in place of the key
+-- | - An optional description
 flag :: String -> Array String -> Maybe String -> Y Boolean
 flag key aliases desc = yarg key aliases desc (Left false) false
 
+-- | Get the raw command line arguments object.
 rest :: Y (Array Foreign)
 rest = Y { setup: mempty
          , read: readArray

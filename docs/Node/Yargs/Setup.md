@@ -6,6 +6,18 @@
 data YargsSetup :: *
 ```
 
+A value which can be used to configure the `yargs` module.
+
+The `Semigroup` and `Monoid` instances can be used to combine the various
+options, which are made available as functions by this module:
+
+```purescript
+setup = fold
+  [ usage "$0 -w Word1 -w Word2"
+  , example "$0 -w Hello -w World" "Say hello!"
+  ]
+```
+
 ##### Instances
 ``` purescript
 Semigroup YargsSetup
@@ -18,11 +30,15 @@ Monoid YargsSetup
 usage :: String -> YargsSetup
 ```
 
+Provide a usage message.
+
 #### `example`
 
 ``` purescript
 example :: String -> String -> YargsSetup
 ```
+
+Provide an example command and description.
 
 #### `alias`
 
@@ -96,7 +112,7 @@ help :: String -> String -> YargsSetup
 defaultHelp :: YargsSetup
 ```
 
-Will make --help the option to trigger help output
+Will make `--help` the option to trigger help output
 
 #### `version`
 
@@ -111,7 +127,7 @@ defaultVersion :: YargsSetup
 ```
 
 Tries to find your package.json and parse the "version" field
-Will make --version the option to trigger version output
+Will make `--version` the option to trigger version output
 
 #### `showHelpOnFail`
 

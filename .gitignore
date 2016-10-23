@@ -1,7 +1,6 @@
-.*
-!/.bowerrc
-!/.gitignore
-/output/
-/node_modules/
-/bower_components/
-/tmp/
+.psci*
+bower_components/
+output/
+.psc-package
+.psc-ide-port
+node_modules/
