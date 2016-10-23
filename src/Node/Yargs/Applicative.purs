@@ -14,7 +14,7 @@ import Control.Alt ((<|>))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE)
 import Control.Monad.Eff.Exception (EXCEPTION, error, throwException)
-import Control.Monad.Eff.Unsafe (unsafeInterleaveEff)
+import Control.Monad.Except (runExcept)
 import Data.Either (Either(Left, Right))
 import Data.Foldable (foldMap)
 import Data.Foreign (Foreign, F, readArray)
@@ -47,9 +47,9 @@ runY :: forall a eff. YargsSetup ->
                          Eff (err :: EXCEPTION, console :: CONSOLE | eff) a
 runY setup (Y y) = do
   value <- runYargs (setup <> y.setup)
-  case y.read value of
+  case runExcept (y.read value) of
     Left err -> throwException (error (show err))
-    Right action -> unsafeInterleaveEff action
+    Right action -> action
 
 class Arg a where
   arg :: String -> Y a
