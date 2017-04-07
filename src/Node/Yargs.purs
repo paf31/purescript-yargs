@@ -18,7 +18,7 @@ import Node.Yargs.Setup (YargsSetup)
 
 -- | The type of the `yargs` module, i.e. the result of
 -- | `require('yargs')`.
-foreign import data Yargs :: *
+foreign import data Yargs :: Type
 
 -- | Get a reference to the `yargs` module.
 foreign import yargs :: forall eff. Eff (console :: CONSOLE | eff) Yargs

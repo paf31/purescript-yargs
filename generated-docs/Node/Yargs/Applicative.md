@@ -20,7 +20,7 @@ Applicative Y
 #### `runY`
 
 ``` purescript
-runY :: forall a eff. YargsSetup -> Y (Eff (err :: EXCEPTION, console :: CONSOLE | eff) a) -> Eff (err :: EXCEPTION, console :: CONSOLE | eff) a
+runY :: forall a eff. YargsSetup -> Y (Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a) -> Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a
 ```
 
 Compute some `Eff` action using command-line arguments, and run it.
@@ -30,7 +30,7 @@ This function can throw exceptions.
 #### `Arg`
 
 ``` purescript
-class Arg a where
+class Arg a  where
   arg :: String -> Y a
 ```
 

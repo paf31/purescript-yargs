@@ -8,7 +8,7 @@ For a more idiomatic interface, consider using the
 #### `Yargs`
 
 ``` purescript
-data Yargs :: *
+data Yargs :: Type
 ```
 
 The type of the `yargs` module, i.e. the result of

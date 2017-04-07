@@ -3,7 +3,7 @@
 #### `YargsSetup`
 
 ``` purescript
-data YargsSetup :: *
+data YargsSetup :: Type
 ```
 
 A value which can be used to configure the `yargs` module.
