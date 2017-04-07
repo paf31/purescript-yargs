@@ -9,7 +9,6 @@ module Node.Yargs.Applicative
   ) where
 
 import Prelude
-
 import Control.Alt ((<|>))
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE)
@@ -17,10 +16,11 @@ import Control.Monad.Eff.Exception (EXCEPTION, error, throwException)
 import Control.Monad.Except (runExcept)
 import Data.Either (Either(Left, Right))
 import Data.Foldable (foldMap)
-import Data.Foreign (Foreign, F, readArray)
-import Data.Foreign.Class (class IsForeign, readProp)
+import Data.Foreign (F, Foreign, readArray, readBoolean, readNumber, readString)
+import Data.Foreign.Index (readProp)
 import Data.Maybe (Maybe)
 import Data.Monoid (mempty)
+import Data.Traversable (traverse)
 import Node.Yargs (runYargs)
 import Node.Yargs.Setup (YargsSetup, requiresArg, describe, demand, alias, boolean, string)
 
@@ -50,8 +50,8 @@ instance applicativeY :: Applicative Y where
 -- |
 -- | This function can throw exceptions.
 runY :: forall a eff. YargsSetup ->
-                      Y (Eff (err :: EXCEPTION, console :: CONSOLE | eff) a) ->
-                         Eff (err :: EXCEPTION, console :: CONSOLE | eff) a
+                      Y (Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a) ->
+                         Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a
 runY setup (Y y) = do
   value <- runYargs (setup <> y.setup)
   case runExcept (y.read value) of
@@ -64,36 +64,38 @@ class Arg a where
 
 instance argString :: Arg String where
   arg key = Y { setup: string key
-              , read: readProp key
+              , read: readProp key >=> readString
               }
 
 instance argBoolean :: Arg Boolean where
   arg key = Y { setup: boolean key
-              , read: readProp key
+              , read: readProp key >=> readBoolean
               }
 
 instance argNumber :: Arg Number where
   arg key = Y { setup: mempty
-              , read: readProp key
+              , read: readProp key >=> readNumber
               }
 
-readOneOrMany :: forall a. IsForeign a => String -> Foreign -> F (Array a)
-readOneOrMany key value = (pure <$> readProp key value)
-                                <|> readProp key value
+readOneOrMany :: forall a. (Foreign -> F a) -> String -> Foreign -> F (Array a)
+readOneOrMany f key value = do
+  value' <- readProp key value
+  pure <$> f value'
+       <|> (readArray value' >>= traverse f)
 
 instance argStrings :: Arg (Array String) where
   arg key = Y { setup: string key
-              , read: readOneOrMany key
+              , read: readOneOrMany readString key
               }
 
 instance argBooleans :: Arg (Array Boolean) where
   arg key = Y { setup: boolean key
-              , read: readOneOrMany key
+              , read: readOneOrMany readBoolean key
               }
 
 instance argNumbers :: Arg (Array Number) where
   arg key = Y { setup: mempty
-              , read: readOneOrMany key
+              , read: readOneOrMany readNumber key
               }
 
 -- | Describe a single command line argument.

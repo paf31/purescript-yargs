@@ -36,7 +36,7 @@ import Unsafe.Coerce (unsafeCoerce)
 -- |   , example "$0 -w Hello -w World" "Say hello!"
 -- |   ]
 -- | ```
-foreign import data YargsSetup :: *
+foreign import data YargsSetup :: Type
 
 instance semigroupYargsSetup :: Semigroup YargsSetup where
   append s1 s2 = unsafeCoerce \y -> unsafeCoerce s2 (unsafeCoerce s1 y)
