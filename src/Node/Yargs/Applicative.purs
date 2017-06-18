@@ -142,5 +142,5 @@ flag key aliases desc = yarg key aliases desc (Left false) false
 -- | Get the raw command line arguments object.
 rest :: Y (Array Foreign)
 rest = Y { setup: mempty
-         , read: readArray
+         , read: readProp "_" >=> readArray
          }
