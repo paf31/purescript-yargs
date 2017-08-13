@@ -3,5 +3,5 @@ purescript-yargs [![Build Status](https://travis-ci.org/paf31/purescript-yargs.s
 
 PureScript bindings to the [yargs](https://github.com/chevex/yargs) command line argument parsing library, including an applicative interface.
 
-- [Documentation](https://github.com/paf31/purescript-yargs)
+- [Documentation](generated-docs/Node)
 - [Examples](test/Main.purs)
