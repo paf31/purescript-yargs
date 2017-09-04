@@ -16,7 +16,7 @@ import Control.Monad.Eff.Exception (EXCEPTION, error, throwException)
 import Control.Monad.Except (runExcept)
 import Data.Either (Either(Left, Right))
 import Data.Foldable (foldMap)
-import Data.Foreign (F, Foreign, readArray, readBoolean, readNumber, readString)
+import Data.Foreign (F, Foreign, readArray, readBoolean, readInt, readNumber, readString)
 import Data.Foreign.Index (readProp)
 import Data.Maybe (Maybe)
 import Data.Monoid (mempty)
@@ -75,6 +75,11 @@ instance argBoolean :: Arg Boolean where
 instance argNumber :: Arg Number where
   arg key = Y { setup: mempty
               , read: readProp key >=> readNumber
+              }
+
+instance argInt :: Arg Int where
+  arg key = Y { setup: mempty
+              , read: readProp key >=> readInt
               }
 
 readOneOrMany :: forall a. (Foreign -> F a) -> String -> Foreign -> F (Array a)
