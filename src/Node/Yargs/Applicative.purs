@@ -47,9 +47,7 @@ instance applicativeY :: Applicative Y where
 -- | Compute some `Eff` action using command-line arguments, and run it.
 -- |
 -- | This function can throw exceptions.
-runY :: forall a. YargsSetup ->
-                  Y (Effect a) ->
-                  Effect a
+runY :: forall a. YargsSetup -> Y (Effect a) -> Effect a
 runY setup (Y y) = do
   value <- runYargs (setup <> y.setup)
   case runExcept (y.read value) of
