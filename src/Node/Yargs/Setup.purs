@@ -22,7 +22,6 @@ module Node.Yargs.Setup
 import Prelude
 
 import Data.Function.Uncurried (runFn2, runFn3, runFn0)
-import Data.Monoid (class Monoid)
 import Unsafe.Coerce (unsafeCoerce)
 
 -- | A value which can be used to configure the `yargs` module.

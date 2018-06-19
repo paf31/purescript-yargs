@@ -17,37 +17,37 @@ The type of the `yargs` module, i.e. the result of
 #### `yargs`
 
 ``` purescript
-yargs :: forall eff. Eff (console :: CONSOLE | eff) Yargs
+yargs :: Effect Yargs
 ```
 
 Get a reference to the `yargs` module.
 
+#### `runYargs`
+
+``` purescript
+runYargs :: YargsSetup -> Effect Foreign
+```
+
+Setup the `yargs` module and get the resulting parsed command line
+arguments object.
+
+#### `argv`
+
+``` purescript
+argv :: Yargs -> Effect Foreign
+```
+
+Get the raw command line arguments object, as a foreign value.
+
 #### `setupWith`
 
 ``` purescript
-setupWith :: forall eff. YargsSetup -> Yargs -> Eff (console :: CONSOLE | eff) Yargs
+setupWith :: YargsSetup -> Yargs -> Effect Yargs
 ```
 
 Setup the `yargs` module.
 
 See the `Node.Yargs.Setup` module, which contains functions for creating
 values of type `YargsSetup`.
-
-#### `argv`
-
-``` purescript
-argv :: forall eff. Yargs -> Eff (console :: CONSOLE | eff) Foreign
-```
-
-Get the raw command line arguments object, as a foreign value.
-
-#### `runYargs`
-
-``` purescript
-runYargs :: forall eff. YargsSetup -> Eff (console :: CONSOLE | eff) Foreign
-```
-
-Setup the `yargs` module and get the resulting parsed command line
-arguments object.
 
 

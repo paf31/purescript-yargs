@@ -1,22 +1,20 @@
 module Test.Main where
 
 import Prelude
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE, logShow)
-import Control.Monad.Eff.Exception (EXCEPTION)
-import Control.Monad.Except (except)
 import Data.Array (reverse)
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
+import Effect (Effect)
+import Effect.Console (logShow)
 import Node.Yargs.Applicative (flag, yarg, runY)
 import Node.Yargs.Setup (example, usage)
 
-app :: forall eff. Array String -> Boolean -> Eff (console :: CONSOLE | eff) Unit
+app :: Array String -> Boolean -> Effect Unit
 app [] _     = pure unit
 app ss false = logShow ss
 app ss true  = logShow (reverse ss)
 
-main :: forall eff. Eff (console :: CONSOLE, exception :: EXCEPTION | eff) Unit
+main :: Effect Unit
 main = do
   let setup = usage "$0 -w Word1 -w Word2"
               <> example "$0 -w Hello -w World" "Say hello!"

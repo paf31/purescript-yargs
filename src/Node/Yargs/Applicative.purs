@@ -10,17 +10,15 @@ module Node.Yargs.Applicative
 
 import Prelude
 import Control.Alt ((<|>))
-import Control.Monad.Eff (Eff)
-import Control.Monad.Eff.Console (CONSOLE)
-import Control.Monad.Eff.Exception (EXCEPTION, error, throwException)
 import Control.Monad.Except (runExcept)
 import Data.Either (Either(Left, Right))
 import Data.Foldable (foldMap)
-import Data.Foreign (F, Foreign, readArray, readBoolean, readInt, readNumber, readString)
-import Data.Foreign.Index (readProp)
 import Data.Maybe (Maybe)
-import Data.Monoid (mempty)
 import Data.Traversable (traverse)
+import Effect (Effect)
+import Effect.Exception (error, throwException)
+import Foreign (F, Foreign, readArray, readBoolean, readInt, readNumber, readString)
+import Foreign.Index (readProp)
 import Node.Yargs (runYargs)
 import Node.Yargs.Setup (YargsSetup, requiresArg, describe, demand, alias, boolean, string)
 
@@ -49,9 +47,9 @@ instance applicativeY :: Applicative Y where
 -- | Compute some `Eff` action using command-line arguments, and run it.
 -- |
 -- | This function can throw exceptions.
-runY :: forall a eff. YargsSetup ->
-                      Y (Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a) ->
-                         Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a
+runY :: forall a. YargsSetup ->
+                  Y (Effect a) ->
+                  Effect a
 runY setup (Y y) = do
   value <- runYargs (setup <> y.setup)
   case runExcept (y.read value) of

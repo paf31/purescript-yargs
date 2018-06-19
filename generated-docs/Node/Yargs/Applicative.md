@@ -20,7 +20,7 @@ Applicative Y
 #### `runY`
 
 ``` purescript
-runY :: forall a eff. YargsSetup -> Y (Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a) -> Eff (exception :: EXCEPTION, console :: CONSOLE | eff) a
+runY :: forall a. YargsSetup -> Y (Effect a) -> Effect a
 ```
 
 Compute some `Eff` action using command-line arguments, and run it.
@@ -41,6 +41,7 @@ The `Arg` class describes types which can be parsed from the command line.
 Arg String
 Arg Boolean
 Arg Number
+Arg Int
 Arg (Array String)
 Arg (Array Boolean)
 Arg (Array Number)
